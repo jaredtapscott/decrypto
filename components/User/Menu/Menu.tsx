@@ -4,7 +4,7 @@ import {Button, Menu, MenuItem} from '@mui/material';
 import CardSmall from '../CardSmall/CardSmall';
 import Link from 'next/link';
 
-const UserMenu = ({user}) => {
+const UserMenu = ({user} : {user:any}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

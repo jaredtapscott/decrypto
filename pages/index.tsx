@@ -5,7 +5,8 @@ import {
   withAuthUser,
   withAuthUserTokenSSR,
 } from 'next-firebase-auth'
-import {Container, Button} from '@mui/material';
+import {Container} from '@mui/material';
+import CoinbaseAPI from '../utils/initCoinbase';
 
 const styles = {
   content: {
@@ -23,14 +24,14 @@ const styles = {
 
 const Home = () => {
   const AuthUser = useAuthUser();
-  console.log('AuthUser: ', AuthUser);
+  CoinbaseAPI();
   return (
     <div>
       <Header user={AuthUser} />
       <Container maxWidth="xl">
         <h2>Welcome to your crypto finance dashboard.</h2>
         <ul>
-          <li>fetch my wallet from <Button onClick="api/coinbase">coinbaseAPI</Button></li>
+          <li>fetch my wallet from <a href="api/coinbase">coinbaseAPI</a></li>
           <li>fetch my wallet from coinbaseProAPI</li>
           <li>fetch my wallet from Metamask</li>
         </ul>
