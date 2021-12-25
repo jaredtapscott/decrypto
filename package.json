@@ -1,32 +1,5 @@
 {
   "name": "decrypto",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
-    "@mui/material": "^5.2.5",
-    "firebase": "^9.6.1",
-    "firebase-admin": "^10.0.1",
-    "isomorphic-fetch": "^3.0.0",
-    "next": "^12.0.7",
-    "next-absolute-url": "^1.2.2",
-    "next-firebase-auth": "^1.0.0-canary.4",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-firebaseui": "^6.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "17.0.2",
-    "@types/react": "17.0.37",
-    "eslint": "8.5.0",
-    "eslint-config-next": "12.0.7",
-    "sass": "^1.45.1",
-    "typescript": "4.5.4"
-  }
+  "version": "0.1.0",
+  "private": true
 }
