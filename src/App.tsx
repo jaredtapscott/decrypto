@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -18,6 +18,8 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+import Header from './components/Layouts/Header/Header';
+import { getAuth } from "firebase/auth";
 
 // Route Config
 import routes from './utils/routes';
@@ -25,8 +27,14 @@ import routes from './utils/routes';
 
 const drawerWidth = 240;
 
+const isLoggedIn = () => {
+  const user = getAuth().currentUser;
+  console.log('Is the user logged in?', user?.displayName);
+  return user;
+}
 
-const App = () => {
+const App = () => {  
+  const user = isLoggedIn();
   return (
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -34,11 +42,7 @@ const App = () => {
           position="fixed"
           sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
         >
-          <Toolbar>
-            <Typography variant="h6" noWrap component="div">
-              Decrypto
-            </Typography>
-          </Toolbar>
+          <Header user={user} />
         </AppBar>
         <Drawer
           sx={{
