@@ -13,11 +13,16 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
+  Link,
+  BrowserRouter,
+  Routes,
+  Route
 } from "react-router-dom";
+
+// ROUTE COMPONENTS
+import Dashboard from '../../../pages/Dashboard/Dashboard';
+import Profile from '../../../pages/Profile/Profile';
+import Settings from '../../../pages/Settings/Settings';
 
 const routes = [
   {
@@ -26,51 +31,22 @@ const routes = [
     title: "Dashboard",
   },
   {
-    path: "/Currency",
-    component: Currency,
-    title: "Currency",
+    path: "/profile",
+    component: Profile,
+    title: "Profile",
+  },
+  {
+    path: "/settings",
+    component: Settings,
+    title: "Settings",
   }
 ];
 
 const drawerWidth = 240;
 
-// A special wrapper for <Route> that knows how to
-// handle "sub"-routes by passing them in a `routes`
-// prop to the component it renders.
-function RouteWithSubRoutes(route) {
-  return (
-    <Route
-      path={route.path}
-      render={(props:any) => (
-        // pass the sub-routes down to keep nesting
-        <route.component {...props} routes={route.routes} />
-      )}
-    />
-  );
-}
 
-function Dashboard() {
-  return <h2>Dashboard</h2>;
-}
-
-function Currency() {
-  return (
-    <div>
-      <h2>Tacos</h2>
-    </div>
-  );
-}
-
-function Bus() {
-  return <h3>Bus</h3>;
-}
-
-function Cart() {
-  return <h3>Cart</h3>;
-}
 const SideDrawer = () => {
   return (
-    <Router>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar
@@ -79,7 +55,7 @@ const SideDrawer = () => {
         >
           <Toolbar>
             <Typography variant="h6" noWrap component="div">
-              Permanent drawer
+              Decrypto
             </Typography>
           </Toolbar>
         </AppBar>
@@ -99,11 +75,11 @@ const SideDrawer = () => {
           <Divider />
           <List>
             {routes.map((route, i) => (
-              <ListItem button key={route.title}>
+              <ListItem button key={i}>
                 <ListItemIcon>
                   {i % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
-                <Link to={route.path}><ListItemText primary={text} /></Link>
+                <Link to={route.path}><ListItemText primary={route.title} /></Link>
               </ListItem>
             ))}
           </List>
@@ -113,15 +89,15 @@ const SideDrawer = () => {
           sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
         >
           <Toolbar />
-          <Switch>
-          {routes.map((route, i) => (
-            <RouteWithSubRoutes key={i} {...route} />
-          ))}
-        </Switch>
-
+          <BrowserRouter>
+            <Routes>
+            {routes.map((route, i) => (
+              <Route key={i} path={route.path} element={`<${route.component} />`} />
+            ))}
+            </Routes>
+          </BrowserRouter>
         </Box>
       </Box>
-    </Router>
   );
 }
 

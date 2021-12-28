@@ -1,17 +1,82 @@
 import React from 'react';
 import './App.css';
-import SideDrawer from './components/Layouts/SideDrawer/SideDrawer';
-import { Container } from '@mui/material';
-import { BrowserRouter } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import CssBaseline from '@mui/material/CssBaseline';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import {
+  Link,
+  Routes,
+  Route
+} from "react-router-dom";
 
-function App() {
+// Route Config
+import routes from './utils/routes';
+
+
+const drawerWidth = 240;
+
+
+const App = () => {
   return (
-    <BrowserRouter>
-      <SideDrawer />
-      <Container maxWidth="lg" className="App">
-        <p>start here...</p>
-      </Container>
-    </BrowserRouter>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+        >
+          <Toolbar>
+            <Typography variant="h6" noWrap component="div">
+              Decrypto
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
+          }}
+          variant="permanent"
+          anchor="left"
+        >
+          <Toolbar />
+          <Divider />
+          <List>
+            {routes.map((route, i) => (
+              <ListItem button key={i}>
+                <ListItemIcon>
+                  {i % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <Link to={route.path}><ListItemText primary={route.title} /></Link>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+        >
+          <Toolbar />
+          <Routes>
+          {routes.map((route, i) => (
+            <Route key={i} path={route.path} element={route.element} />
+          ))}
+          </Routes>
+        </Box>
+      </Box>
   );
 }
 
