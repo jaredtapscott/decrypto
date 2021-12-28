@@ -2,15 +2,16 @@ import React from 'react';
 import './App.css';
 import SideDrawer from './components/Layouts/SideDrawer/SideDrawer';
 import { Container } from '@mui/material';
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
+    <BrowserRouter>
       <SideDrawer />
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" className="App">
         <p>start here...</p>
       </Container>
-    </div>
+    </BrowserRouter>
   );
 }
 
