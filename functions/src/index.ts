@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import * as Coinbase from './coinbase';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -8,8 +9,9 @@ const db = admin.firestore();
 // // https://firebase.google.com/docs/functions/typescript
 //
 const helloWorld = functions.https.onRequest((request, response) => {
+  response.set('Access-Control-Allow-Origin', '*');
   functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from the NEW Firebase!");
+  response.send({text: "Hello from the EVEN NEWER Firebase!"});
 });
 
 
@@ -28,24 +30,9 @@ const createProfile = (userRecord:any, context:any) => {
   .catch(console.error);
 };
 
-/**
- * COINBASE API Connect
-*/
-let cbHeaders = {
-  baseURL: 'https://api.exchange.coinbase.com/',
-  apiKey: '9ce47f0d756557653a7066deabe0706b',
-  apiSecret: 'KkyT9TayF72U4N062T6OCY+d94eXicejtlEmeXfpgJlLtsvOLiKzUQCCk8FnAi+Rg0bwDr8QB9me68hnw2X77Q==',
-  apiPassphrase: 'isgli1czcw',
-}
-
-const coinbaseAPI = () => {
-
-}
-
-
-
 
 module.exports = {
   authOnCreate: functions.auth.user().onCreate(createProfile),
-  helloWorld: helloWorld
+  coinbase: Coinbase,
+  helloWorld: helloWorld,
 };  

@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Dashboard.module.css';
 import {Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import Coinbase from '../../utils/coinbase';
 
 function createData(
   token: string,
@@ -20,6 +21,15 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
+let response:any
+Coinbase().then((res:any) => {
+  response = res;
+});
+
+response?.map((data:any) => {
+  console.log('response: ', data)
+});
+
 const Dashboard = () => (
   <Container className={styles.Dashboard}>
     Dashboard Component: <strong>Add .ENV variables!!!!</strong>
@@ -35,17 +45,17 @@ const Dashboard = () => (
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {response?.map((row:any) => (
             <TableRow
-              key={row.token}
+              key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.token}
+                {row.currency}
               </TableCell>
-              <TableCell align="right">{row.tokenPrice}</TableCell>
-              <TableCell align="right">{row.amountIn}</TableCell>
-              <TableCell align="right">{row.currentValue}</TableCell>
+              <TableCell align="right">{row.balance}</TableCell>
+              <TableCell align="right">{row.hold}</TableCell>
+              <TableCell align="right">{row.available}</TableCell>
               <TableCell align="right">{row.profit}</TableCell>
             </TableRow>
           ))}

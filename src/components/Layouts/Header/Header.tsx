@@ -30,7 +30,6 @@ function Header(props:any) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log('routes: ', props.routes);
 
   return (
   <Toolbar className={styles.Header}>
@@ -61,7 +60,7 @@ function Header(props:any) {
         }}
         >
         {props.routes?.map((route:any, i:number) => (
-          <MenuItem onClick={handleClose}><NavLink to={route.path}>{route.title}</NavLink></MenuItem>
+          <MenuItem key={i} onClick={handleClose}><NavLink to={route.path}>{route.title}</NavLink></MenuItem>
         ))}
           <MenuItem onClick={Auth.logout}>Logout</MenuItem>
         </Menu>
