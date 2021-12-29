@@ -48,7 +48,9 @@ const App = () => {
     }
   }))
     return (
-        <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex' }}>
+      {isLoggedIn ? (
+        <div>
           <CssBaseline />
           <AppBar
             position="fixed"
@@ -92,7 +94,13 @@ const App = () => {
             ))}
             </Routes>
           </Box>
-        </Box>
+          </div>
+      ):(
+        <AppBar position="fixed">
+          <Header user={user} isLoggedIn={isLoggedIn}/>
+        </AppBar>
+    )}
+      </Box>
     )
 }
 

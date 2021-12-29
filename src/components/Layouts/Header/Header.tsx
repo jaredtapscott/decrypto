@@ -35,7 +35,7 @@ function Header(props:any) {
       <MenuIcon />
     </IconButton>
     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-      Dashboard
+      Decrypto
     </Typography>
     {props.isLoggedIn ? (
       <div>
