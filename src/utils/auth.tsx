@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup,  } from "firebase/auth";
+import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    setPersistence, 
+    browserSessionPersistence,
+    onAuthStateChanged,
+} from "firebase/auth";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -14,35 +21,30 @@ const firebaseConfig = {
     measurementId: "G-Z97GNE0Y3R"
   };
 
-const app = initializeApp(firebaseConfig);
-const provider = new GoogleAuthProvider();
+initializeApp(firebaseConfig);
 const auth = getAuth();
 
-const getUser = () => {
-    const user =  getAuth().currentUser;
-    console.log('getuser:', user);
-    return user;
-
-}
 // Login in call
 const Login = async () => {
-    // Using a popup.
-    provider.addScope('profile');
-    provider.addScope('email');
-    return signInWithPopup(auth, provider).then((result) => {
-        console.log('Who is this? This is ', result.user.displayName);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        return result.user;
-    }).catch((err:any) => {
-        console.error(err);
-        return err.message;
-    });
+    return setPersistence(auth, browserSessionPersistence)
+        .then(() => {
+            const provider = new GoogleAuthProvider();
+            // Using a popup.
+            provider.addScope('profile');
+            provider.addScope('email');
+            return signInWithPopup(auth, provider).then((result) => {
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                return result.user;
+            }).catch((err:any) => {
+                console.error(err);
+                return err.message;
+            });
+        })
 }
 
 // Logout in call
-const logout = () => {
+const Logout = () => {
     return auth.signOut().then(res => {
-        console.log('logout: success');
         return 'success'
     }).catch(err => {
         console.error(err);
@@ -52,8 +54,7 @@ const logout = () => {
 
 const Auth = {
     login: Login,
-    logout: logout,
-    getUser: getUser,
+    logout: Logout
 }
 
 export default Auth;

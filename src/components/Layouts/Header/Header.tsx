@@ -3,6 +3,8 @@ import {
   Toolbar,
   Typography,
   Button,
+  Menu,
+  MenuItem,
   IconButton,
   Avatar,
 } from '@mui/material';
@@ -10,23 +12,17 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Auth from '../../../utils/auth';
 
 function Header(props:any) {
-  // Set State Variables
-  const [isLoggedIn, setLogin] = useState(false);
-  const [user, setUser] = useState({});
-  console.log('header props: ', props.name);
+  
+  // Trigger UserMenu
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // to open the user menu
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  const login = async () => {
-    let res = await Auth.login();
-    setUser(res);
-    setLogin(true);
-    console.log('login', isLoggedIn);
-  }
-  const logout = async () => {
-    let res = await Auth.logout();
-    setUser(res);
-    setLogin(false);
-    console.log('logout', isLoggedIn);
-  }
   return (
   <Toolbar>
     <IconButton
@@ -41,12 +37,25 @@ function Header(props:any) {
     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
       Dashboard
     </Typography>
-    {isLoggedIn ? (
+    {props.isLoggedIn ? (
       <div>
-        <Button color="inherit" onClick={logout}><Avatar alt={props.user.displayName} src={props.user.photoURL} /></Button>
+        <Button onClick={handleClick}>
+            <Avatar alt={props.user?.displayName} src={props.user?.photoURL} />
+        </Button>
+        <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        >
+          <MenuItem onClick={Auth.logout}>Logout</MenuItem>
+        </Menu>
+
       </div>
     ):(
-        <Button color="inherit" onClick={login}>Login</Button>
+        <Button color="inherit" onClick={Auth.login}>Login</Button>
     )}
   </Toolbar>
 )};
