@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.MuiMenuItem-root a {
+  text-decoration-line: none;
+}
+.MuiMenuItem-root .active {
+  font-weight: bold;
+  color: black;
+  text-decoration-line: none;
+}

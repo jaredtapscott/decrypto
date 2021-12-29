@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import './App.css';
-import Auth from './utils/auth';
+import styles from './App.module.css';
 import { 
   getAuth, 
   onAuthStateChanged,
 } from "firebase/auth";
-
 import {
   Box,
   Drawer,
@@ -53,36 +51,13 @@ const App = () => {
         <div>
           <CssBaseline />
           <AppBar
+            className={styles.header} 
             position="fixed"
-            sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+            color="transparent" 
           >
-            <Header user={user} isLoggedIn={isLoggedIn}/>
+            <Header user={user} isLoggedIn={isLoggedIn} routes={routes}/>
           </AppBar>
-          <Drawer
-            sx={{
-              width: drawerWidth,
-              flexShrink: 0,
-              '& .MuiDrawer-paper': {
-                width: drawerWidth,
-                boxSizing: 'border-box',
-              },
-            }}
-            variant="permanent"
-            anchor="left"
-          >
-            <Toolbar />
-            <Divider />
-            <List>
-              {routes.map((route, i) => (
-                <ListItem button key={i}>
-                  <ListItemIcon>
-                    {i % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <Link to={route.path}><ListItemText primary={route.title} /></Link>
-                </ListItem>
-              ))}
-            </List>
-          </Drawer>
+
           <Box
             component="main"
             sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
