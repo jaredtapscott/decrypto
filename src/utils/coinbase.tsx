@@ -1,46 +1,69 @@
-import React from 'react';
 import fetch from 'isomorphic-fetch';
+import { forEachChild } from 'typescript';
 
-// Set these in your ENVironment, or enter them here with the actual string
-const apiKey = "ae481bed262b8f1df04a021ba06fc6af";
-const apiPassphrase = "r3ct0xl74ae";
+const url = 'https://us-central1-decrypto-1b1ce.cloudfunctions.net/api/coinbase';
+// const url = 'http://localhost:5001/decrypto-1b1ce/us-central1/api/coinbase';
 
-const apiUrl = "https://api.exchange.coinbase.com/";
+const apiCall = async (method:string, path:string, bodyObject?:any) => {
+    
+    // if bodyObject was received then use that
+    // if not then create an empty object
+    let body = bodyObject?bodyObject:{};
+    body.path = path;
+    body.method = method;
 
-const createRequest = async () => {
-
-    // create a hexedecimal encoded SHA256 signature of the message
-    return await fetch('https://us-central1-decrypto-1b1ce.cloudfunctions.net/coinbase-getHash', { method: 'GET' })
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    };
+    return await fetch(url, options)
         .then((res:any) => {
+            console.log('status: ', res.status); 
             return res.json();
-        }).then((data:any) => {
-        // create the request options object
-        return {
-            method: "GET",
-            headers: {
-                Access: "application/json",
-                'cb-access-sign': data.signature,
-                'cb-access-timestamp': data.timestamp.toString(),
-                'cb-access-key': apiKey,
-                'cb-access-passphrase': apiPassphrase,
-            },
-        };
-    });
-    // const signature = crypto.createHmac("sha256", apiSecret).update(message).digest("hex");
-
+        }).then((data: any) => {
+            return data.data;
+        })
+        .catch((err:any) => console.error('error: ', err));
 }
 
-const Coinbase = async () => {
-    const url = 'https://api.exchange.coinbase.com/accounts';
-    return createRequest().then((options:any)=> {
-        return fetch(url, options)
-            .then((res:any) => {
-                return res.json();
-            }).then((data:any) => {
+// Just get a list of crypto that I own
+const getCrypto = async () => {
+    return await apiCall('GET', '/accounts')
+    .then((res:any)=> {
+        return res.filter((data:any) => data.balance > 0);
+    }).then((list:any) => {
+        list = list.map((data:any) => {
+            data.details = getCryptoDetails(data.currency).then(details => {
+                data.details = details;
                 return data;
-            })
-            .catch((err:any) => console.error('error: ', err));
+            });
+            return data;
+        })
+        console.log('list: ', list);
+        return list;
+
+    }).catch((err:any) => {
+        console.error(err);
     });
 };
 
-export default Coinbase;
+// Just get a list of crypto that I own
+const getCryptoDetails = async (id:string) => {
+    let path = '/products/' + id + '-USD';
+    return await apiCall('GET', path)
+    .then((res:any)=> {
+        return res;
+    }).catch((err:any) => {
+        console.error(err);
+    });
+};
+
+// Exports
+const api = {
+    getCrypto: getCrypto,
+};
+
+export default api;

@@ -1,17 +1,28 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import * as Coinbase from './coinbase';
+import { Request, Response } from "express";
 
+// express imports
+import * as express from 'express';
+import * as cors from 'cors';
+
+// app imports
+import { coinbaseRoutesConfig } from './coinbase/routes-config';
+
+// init firebase app
 admin.initializeApp();
 const db = admin.firestore();
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-const helloWorld = functions.https.onRequest((request, response) => {
-  response.set('Access-Control-Allow-Origin', '*');
-  functions.logger.info("Hello logs!", {structuredData: true});
-  response.send({text: "Hello from the EVEN NEWER Firebase!"});
+// Initialize Express App
+const app = express();
+app.use(express.json())
+app.use(cors({ origin: true })); // Automatically allow cross-origin requests
+coinbaseRoutesConfig(app)
+
+// Routes
+app.post('/', (req: Request, res: Response) => {
+  functions.logger.log('app post res: ', req.body )
+  return res.status(200).send({message: 'posted', data: req.body});
 });
 
 
@@ -33,6 +44,5 @@ const createProfile = (userRecord:any, context:any) => {
 
 module.exports = {
   authOnCreate: functions.auth.user().onCreate(createProfile),
-  coinbase: Coinbase,
-  helloWorld: helloWorld,
+  api: functions.https.onRequest(app), // Expose Express API as a single Cloud Function:
 };  

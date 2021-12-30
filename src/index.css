@@ -15,6 +15,10 @@ code {
 .MuiMenuItem-root a {
   text-decoration-line: none;
 }
+.MuiMenuItem-root a:visited {
+  color: black;
+}
+
 .MuiMenuItem-root .active {
   font-weight: bold;
   color: black;
