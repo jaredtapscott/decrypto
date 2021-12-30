@@ -46,7 +46,7 @@ const App = () => {
     }
   }))
     return (
-      <Box sx={{ display: 'flex' }}>
+      <Box>
       {isLoggedIn ? (
         <div>
           <CssBaseline />
@@ -71,7 +71,7 @@ const App = () => {
           </Box>
           </div>
       ):(
-        <AppBar position="fixed">
+        <AppBar position="fixed" color="transparent">
           <Header user={user} isLoggedIn={isLoggedIn}/>
         </AppBar>
     )}

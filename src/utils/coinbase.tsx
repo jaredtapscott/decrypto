@@ -37,7 +37,6 @@ const Coinbase = async () => {
             .then((res:any) => {
                 return res.json();
             }).then((data:any) => {
-                console.log('coinbase data: ', data);
                 return data;
             })
             .catch((err:any) => console.error('error: ', err));
