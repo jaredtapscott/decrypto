@@ -9,7 +9,6 @@ const getCrypto = async (fiat:string) => {
   try {
     let res = await api.getCrypto(fiat);
     data = res;
-    console.log('getCrypto', data);
     return data;
   } catch (e) {
     console.log(e);
@@ -18,10 +17,9 @@ const getCrypto = async (fiat:string) => {
 getCrypto('USD');
 
 const CryptoPortfolio = (props:any) => {
-  const [cryptoPrice, setPrice] = useState('');
 
   const receivePrice = (price:any) => {
-    return price;
+    console.log('receivePrice: ', price);
   }
 
   console.log('Crypto Rendered', data);
