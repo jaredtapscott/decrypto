@@ -6,20 +6,11 @@ import {
 } from "firebase/auth";
 import {
   Box,
-  Drawer,
   CssBaseline,
   AppBar,
   Toolbar,
-  List,
-  Divider,
-  ListItem,
-  ListItemIcon,
-  ListItemText 
 } from '@mui/material';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import {
-  Link,
   Routes,
   Route
 } from "react-router-dom";
@@ -27,7 +18,6 @@ import Header from './components/Layouts/Header/Header';
 // Route Config
 import routes from './utils/routes';
 
-const drawerWidth = 240;
 
 const App = () => {  
 

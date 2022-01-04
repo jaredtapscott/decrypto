@@ -17,7 +17,13 @@
       "withTest": true,
       "withStory": false,
       "withLazy": true
+    },
+    "cards": {
+      "path": "src/components/cards",
+      "withStyle": true,
+      "withTest": true,
+      "withStory": false,
+      "withLazy": true
     }
-
   }
 }

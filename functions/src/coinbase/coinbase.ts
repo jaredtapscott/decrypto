@@ -4,11 +4,24 @@ import { Request, Response } from "express";
 import { createRequest, handleError, setData } from './utils';
 import config from './config';
 
-
+/**
+ * Default Coinbase API call
+ * @param req server request
+ * @param res server response
+ * @returns 
+ */
 async function call(req: Request, res: Response) {
     
     // set the url
-    let url = config.apiUrl + req.body.path;
+    let url:string;
+    if (req.body.api === 'pro'){
+        // if we're using the coinbasePro api then use this url
+        url = config.apiUrlPro + req.body.path;
+        
+    } else {
+        // if we're using the regular old coinbase v2 api then use this url
+        url = config.apiUrl + req.body.path;
+    }
 
     try {
 
@@ -34,10 +47,7 @@ async function call(req: Request, res: Response) {
     } catch (err) {
         return handleError(res, err);
     }
- 
-
-
-
+    
 };
 
 const coinbase = {
