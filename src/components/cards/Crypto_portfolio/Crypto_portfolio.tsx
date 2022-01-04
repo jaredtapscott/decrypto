@@ -22,7 +22,6 @@ const CryptoPortfolio = (props:any) => {
     console.log('receivePrice: ', price);
   }
 
-  console.log('Crypto Rendered', data);
   return (
   <div className={styles.Crypto_portfolio}>
     <TableContainer component={Paper} >
