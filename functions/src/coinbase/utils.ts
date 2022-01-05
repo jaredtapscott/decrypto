@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import * as crypto from 'crypto';
 import config from './config';
 
+
 // create a hexedecimal encoded SHA256 signature of the message
 const makeHash = (path: string, method: string) => {
     // get unix time in seconds
@@ -45,8 +46,12 @@ export const createRequest = (req:Request) => {
 }
 
 // Global error handler
-export const handleError = ((res: Response, err: any) => {
-    return res.status(500).send({ message: `${err.code} - ${err.message}` });
+export const handleError = ((err: any, res?: Response, ) => {
+    if (res) {
+        return res.status(500).send({ message: `${err.code} - ${err.message}` });
+    } else {
+        return functions.logger.log('error logger: ', err);
+    }
  });
 
  // Global logging
@@ -66,7 +71,7 @@ export const handleError = ((res: Response, err: any) => {
 
  // Create Response Data Object
  // This is the object that will be sent back to the app
- export const setData = ((req: Request, data:any) => {
+ export const setData = ((req: any, data:any) => {
     // init response object 
     let res:any = {}
     // add log info

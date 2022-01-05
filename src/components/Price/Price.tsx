@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Price.module.css';
 import api from '../../utils/coinbase';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const Price = (props:any) => {
@@ -17,12 +18,12 @@ const Price = (props:any) => {
   }, [props.fiat])
 
   // send price back to parent component
-  props.receivePrice(price);
+  props.receivePrice({price:price, crypto: props.crypto});
 
 
   if (loading) {
     return (
-        <Chip label="Loading..." />
+      <CircularProgress color="secondary"/>
     )
   } else {
     return (

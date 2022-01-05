@@ -1,17 +1,18 @@
-// npm install crypto
 import * as fetch from 'isomorphic-fetch';
 import { Request, Response } from "express";
 import { createRequest, handleError, setData } from './utils';
 import config from './config';
+import {getUserCrypto} from './portfolio';
 
 /**
  * Default Coinbase API call
  * @param req server request
  * @param res server response
+ * @param internal {boolean} Used to return the data normally instead of sending express api response (i.e. res.send())
  * @returns 
  */
 async function call(req: Request, res: Response) {
-    
+
     // set the url
     let url:string;
     if (req.body.api === 'pro'){
@@ -39,19 +40,25 @@ async function call(req: Request, res: Response) {
                 return data.json();
             }).then((data:any) => {
                 // let response = setData(req, data);
-                let response:any = {}
-                response = setData(req, data);
-                return res.send(response);   
+                let response = setData(req, data);
+                // if this is an internal api call (i.e. not from a web or mobile app) then just return the response
+                if (req.body.internal) {
+                    return response;
+                } else {
+                    // if this is an external api call then send api response 
+                    return res.send(response);   
+                }
             })
-            .catch((err:any) => handleError(res, err));
+            .catch((err:any) => handleError(err, res));
     } catch (err) {
-        return handleError(res, err);
+        return handleError(err, res);
     }
     
 };
 
 const coinbase = {
     call: call,
+    getCrypto: getUserCrypto
 }
 
 export default coinbase;

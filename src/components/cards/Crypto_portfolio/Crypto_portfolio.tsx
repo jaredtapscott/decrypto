@@ -14,14 +14,20 @@ const getCrypto = async (fiat:string) => {
     console.log(e);
   }
 };
+
 getCrypto('USD');
 
 const CryptoPortfolio = (props:any) => {
-
-  const receivePrice = (price:any) => {
-    console.log('receivePrice: ', price);
+  const [prices, setPrices] = useState([]);
+  let arr:any = [];
+  const receivePrice = (res:any) => {
+    arr[res.crypto] = res.price;
   }
-
+  
+  useEffect(() => {
+    setPrices(arr)
+  },[])
+  
   return (
   <div className={styles.Crypto_portfolio}>
     <TableContainer component={Paper} >
@@ -37,7 +43,7 @@ const CryptoPortfolio = (props:any) => {
           </TableRow>
         </TableHead>
         <TableBody>
-        {data && data.map((row:any, i:number) => ( 
+        {data && data.list.map((row:any, i:number) => ( 
             <TableRow
               key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -50,7 +56,7 @@ const CryptoPortfolio = (props:any) => {
                 <Price crypto={row.currency} fiat={props.fiat} receivePrice={receivePrice}/>
               </TableCell>
               <TableCell align="right">
-                $ Value TBD
+                ${row.total}
               </TableCell>
             </TableRow>
           ))} 
