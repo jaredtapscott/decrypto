@@ -32,7 +32,6 @@ const Login = async () => {
             provider.addScope('profile');
             provider.addScope('email');
             return signInWithPopup(auth, provider).then((result) => {
-                const credential = GoogleAuthProvider.credentialFromResult(result);
                 return result.user;
             }).catch((err:any) => {
                 console.error(err);
@@ -53,7 +52,7 @@ const Logout = () => {
 
 const Auth = {
     login: Login,
-    logout: Logout
+    logout: Logout,
 }
 
 export default Auth;

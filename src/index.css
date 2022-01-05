@@ -24,3 +24,7 @@ code {
   color: black;
   text-decoration-line: none;
 }
+
+.MuiTableFooter-root {
+  background-color: #eee;
+}

@@ -1,7 +1,7 @@
 import React, {useState, Suspense} from 'react';
 import styles from './Dashboard.module.css';
 import {Container, Typography, Toolbar, Box, FormControl, InputLabel, Select, SelectChangeEvent, MenuItem } from '@mui/material';
-import CryptoPortfolio from '../../components/cards/Crypto_portfolio/Crypto_portfolio';
+import CryptoPortfolio from '../../components/cards/CryptoPortfolio/Crypto_portfolio';
 
 const Dashboard = () => {
   const [fiat, setFiat] = useState('USD');
@@ -28,6 +28,7 @@ const Dashboard = () => {
               >
                 <MenuItem value={'USD'}>USD</MenuItem>
                 <MenuItem value={"CAD"}>CAD</MenuItem>
+                <MenuItem value={"EUR"}>EUR</MenuItem>
               </Select>
           </FormControl>
         </Box>

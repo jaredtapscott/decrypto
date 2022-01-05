@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './SingleCrypto.module.css';
-import api from '../../../utils/coinbase';
+import api from '../../../utils/apis/coinbase';
 
 /**
  * @name SingleCrypto

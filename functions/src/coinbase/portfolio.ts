@@ -13,7 +13,6 @@ export const getUserCrypto = async (req: Request, res: Response) => {
         // Create Request Object
         req.body.method = 'GET';
         req.body.path = '/accounts';
-        req.body.api = 'pro';
         req.body.internal = true; // tells the api call to return the data to this function instead of send API response (i.e. res.send())
 
 
@@ -23,12 +22,10 @@ export const getUserCrypto = async (req: Request, res: Response) => {
         const filteredList = list.data.filter((data:any) => data.balance > 0);
         // add prices
         let priceList:any = await addPriceToObjectArray(filteredList, req.body.fiat, req, res);
+    
+        let response = setData(req, priceList);
+        return res.send(response);   
         
-        priceList.list.then((data:any) => {
-            let response = setData(req, data);
-            return res.send(response);   
-        });
-
 
     } catch(err) {
         return handleError(err, res);
@@ -54,16 +51,21 @@ const getPrice = async (req: Request, res: Response, currency:any, fiat:string, 
     req.body.api = 'v2';
     
     let pricing:any = await coinbase.call(req, res);
+    const priceData = pricing.data.data;
     // if an object was included in the params then add the price data to the object
     if (object) {
+        // remove any trailing zeros from the balance 
+        let balance:Number = Number(object.balance);
+        object.balance = balance.toString();
+      
         // shorten price down to only 2 decimals (unless that would leave us at $0.00)
-        let amount = parseInt(pricing.data.amount).toFixed(2)
+        let amount = parseFloat(priceData.amount).toFixed(2);
         if (amount !== '0.00' ) {
             object.price = amount;
         } else {
-            object.price = pricing.data.amount;
+            object.price = priceData.amount;
         }        
-        object.fiat = pricing.data.currency;
+        object.fiat = priceData.currency;
         // if the object has the current user's balance then calculate the value of the current balance
         if (object.balance) {
             object.value = (object.price * object.balance).toFixed(2);
@@ -71,11 +73,11 @@ const getPrice = async (req: Request, res: Response, currency:any, fiat:string, 
         return object;
     } else {
         // cut down to only 2 decimals for the price (unless that would leave us at $0.00)
-        let amount = parseInt(pricing.data.amount).toFixed(2)
+        let amount = parseFloat(priceData.amount).toFixed(2)
         if (amount !== '0.00' ) {
-            pricing.data.amount = amount;
+            priceData.amount = amount;
         }
-        return pricing.data;
+        return priceData;
     }
    
 };
@@ -84,17 +86,18 @@ const getPrice = async (req: Request, res: Response, currency:any, fiat:string, 
 // add the price to each object and return a new object with the new array and with the
 // total of all currencies in the array
 const addPriceToObjectArray =  async (arr:Array<[]>, fiat:string, req: Request, res: Response) => {
-    let total: number = 0;
-    let data = {list: [], total: total};
-    let list:any = Promise.all(arr.map(async (item:any, i:number) => {
+    let total: any = 0;
+    let list: any = [];
+    let data = {list: list, total: total};
+    let newList: any = await Promise.all(arr.map(async (item:any, i:number) => {
         // add pricing data to the object
         item = await getPrice(req, res, item.currency, fiat, item);
-         
         // calculate the total
-        data.total = data.total + parseInt(item.value);
+        data.total = data.total + parseFloat(item.value);
         return item;
     }));
-    data.list = list;
+    data.total = data.total.toFixed(2);
+    data.list = newList;
     return data;
 }
 

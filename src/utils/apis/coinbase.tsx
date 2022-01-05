@@ -1,35 +1,6 @@
-import { AnyAaaaRecord } from 'dns';
 import fetch from 'isomorphic-fetch';
-
-const url = 'https://us-central1-decrypto-1b1ce.cloudfunctions.net/api/coinbase';
-// const url = 'http://localhost:5001/decrypto-1b1ce/us-central1/api/coinbase';
-
-const apiCall = async (method:string, path:string, bodyObject?:any) => {
-    
-    // if bodyObject was received then use that
-    // if not then create an empty object
-    let body = bodyObject?bodyObject:{};
-    body.path = path;
-    body.method = method;
-
-    const options = {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    };
-    return fetch(url, options)
-        .then((res:any) => {
-            return res.json();
-        }).then((data: any) => {
-            return data.data;
-        }).catch((err:any) => {
-            console.log('API Call: ', body.api + body.path); 
-            console.error('error: ', err)
-        });
-}
-
+import { apiCall, getToken } from './api';
+  
 // Just get a list of crypto that I own
 const GetCrypto = async (fiat:any) => {
     
@@ -41,10 +12,6 @@ const GetCrypto = async (fiat:any) => {
         // filter out all currency that user does not own
         const filteredList = list.filter((data:any) => data.balance > 0);
         const priceList:any = await addPriceToObjectArray(filteredList, fiat);
-        let newList: any = await priceList.list.then((res:any) => {
-            return res;
-        });
-        priceList.list = newList;
         console.log('priceList: ', priceList)
         return priceList;
     } catch(err:any) {
@@ -66,7 +33,7 @@ const getPrice = async (currency:any, fiat:string, object?:any) => {
     // if an object was included in the params then add the price data to the object
     if (object) {
         // cut down to only 2 decimals for the price (unless that would leave us at $0.00)
-        let amount = parseInt(res.data.amount).toFixed(2)
+        let amount = parseFloat(res.data.amount).toFixed(2)
         if (amount !== '0.00' ) {
             object.price = amount;
         } else {
@@ -80,7 +47,7 @@ const getPrice = async (currency:any, fiat:string, object?:any) => {
         return object;
     } else {
         // cut down to only 2 decimals for the price (unless that would leave us at $0.00)
-        let amount = parseInt(res.data.amount).toFixed(2)
+        let amount = parseFloat(res.data.amount).toFixed(2)
         if (amount !== '0.00' ) {
             res.data.amount = amount;
         }
@@ -92,58 +59,41 @@ const getPrice = async (currency:any, fiat:string, object?:any) => {
 // give this function an array of objects with a "currency" property and this will
 // add the price to each object and return a new object with the new array and with the
 // total of all currencies in the array
-const addPriceToObjectArray =  (arr:Array<[]>, fiat:string) => {
-    let total: number = 0;
-    let data = {list: [], total: total};
-    let list:any =  Promise.all(arr.map(async (item:any, i:number) => {
+const addPriceToObjectArray =  async (arr:Array<[]>, fiat:string) => {
+    let total:any = 0;
+    let list:any = [];
+    let data = {list: list, total: total};
+    let newList:any = await Promise.all(arr.map(async (item:any, i:number) => {
         // add pricing data to the object
         item = await getPrice(item.currency, fiat, item);
         // add item to the data list
-
+        // data.list.push(item);
         // calculate the total
-        data.total = data.total + parseInt(item.value);
+        data.total = data.total + parseFloat(item.value);
         return item;
     }));
-    data.list = list;
+    data.total = data.total.toFixed(2);
+    data.list = newList;
     return data;
 }
 
-interface Cryptfolio {
-    available: number,
-    balance: number,
-    currency: string,
-    fiat?: string,
-    hold: string,
-    id: string,
-    price?: string,
-    profile_id: string,
-    trading_enabled: boolean,
-    value?: string;
-}
+const getCurrencies = async () => {
+    const url = 'https://api.coinbase.com/v2/currencies';
+    // get access token
+    let token = await getToken();
 
-const createPortfolio = (fiat:string) => {
-
-    const url = 'https://us-central1-decrypto-1b1ce.cloudfunctions.net/api/coinbase/crypto';
-    let body = {
-        path: '/accounts',
+    const options = {
         method: 'GET',
-        fiat: fiat,
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': token,
+        }
     };
-    
-    let req: any = {};
-    req.method = 'POST';
-    req.path = '/accounts';
-    req.body = JSON.stringify(body);
-    req.headers = {
-        'Content-Type': 'application/json',
-    }
-    console.log('req: ', req);
 
-    return fetch(url, req)
+    return await fetch(url, options)
     .then((res:any) => {
         return res.json();
     }).then((data: any) => {
-        console.log('Portfolio: ', data.data.list);
         return data.data;
     }).catch((err:any) => {
         console.error('error: ', err)
@@ -151,13 +101,47 @@ const createPortfolio = (fiat:string) => {
 
 }
 
-createPortfolio('USD');
+
+const createPortfolio = async (fiat:string, api:string) => {
+
+    const url = 'https://us-central1-decrypto-1b1ce.cloudfunctions.net/api/coinbase/crypto';
+    let body = {
+        path: '/accounts',
+        method: 'GET',
+        fiat: fiat,
+        api: api,
+    };
+
+    // get access token
+    let token = await getToken();
+
+    let req: any = {};
+    req.method = 'POST';
+    req.path = '/accounts';
+    req.body = JSON.stringify(body);
+    req.headers = {
+        'Content-Type': 'application/json',
+        'authorization': token,
+    }
+
+    return fetch(url, req)
+    .then((res:any) => {
+        return res.json();
+    }).then((data: any) => {
+        return data.data;
+    }).catch((err:any) => {
+        console.error('error: ', err)
+    });
+
+}
 
 // Exports
 const api = {
     getCrypto: GetCrypto,
     getPrice: getPrice,
     addPrice: addPriceToObjectArray,
+    createPortfolio: createPortfolio,
+    getCurrencies: getCurrencies,
 };
 
 export default api;

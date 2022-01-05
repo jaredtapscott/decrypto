@@ -11,13 +11,10 @@ import {
   MenuItem,
   IconButton,
   Avatar,
-  List,
-  ListItem,
-  ListItemText,
   Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Auth from '../../../utils/auth';
+import Auth from '../../../utils/apis/auth';
 
 function Header(props:any) {
   
