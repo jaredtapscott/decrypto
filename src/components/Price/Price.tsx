@@ -1,15 +1,19 @@
 import React from 'react';
 import styles from './Price.module.css';
-import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import LinearProgress from '@mui/material/LinearProgress';
+import Skeleton from '@mui/material/Skeleton';
 
 const Price = (props:any) => {
   if (props.loading) {
     return (
-      <Box sx={{width: '50px', float: 'right', padding: '5px'}}>
-        <LinearProgress color="inherit" />
-      </Box>
+
+      <Skeleton animation="wave"  variant="text" sx={{float: 'right'}}>
+        <Chip 
+          className={styles.Price}
+          label="12345.67890"
+        />
+      </Skeleton>
+
     )
   } else {
     return (

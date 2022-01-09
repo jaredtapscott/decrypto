@@ -56,9 +56,9 @@ async function call(req: Request, res: Response) {
     
 };
 
-const coinbase = {
+const coinbaseAPI = {
     call: call,
     getCrypto: getUserCrypto
 }
 
-export default coinbase;
+export default coinbaseAPI;

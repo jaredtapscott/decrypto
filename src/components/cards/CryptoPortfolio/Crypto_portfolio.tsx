@@ -4,13 +4,17 @@ import Price from '../../Price/Price';
 import api from '../../../utils/apis/coinbase';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper} from '@mui/material';
 
-api.getCrypto('USD');
-
-
 const CryptoPortfolio = (props:any) => {
   let initData = {list: [], total: 0}
   const [data, setData] = useState(initData)
   const [loading, setLoading] = useState(false);
+
+  let title: any;
+  if (props.platform === 'pro') {
+    title = "Coinbase Pro Portfolio";
+  } else {
+    title = "Coinbase Portfolio";
+  }
 
   
   useEffect(() => {
@@ -18,8 +22,10 @@ const CryptoPortfolio = (props:any) => {
       try {
         setData(data);
         setLoading(true);
-        let res = await api.createPortfolio(fiat, 'pro');
+        let res: any;
+        res = await api.createPortfolio(fiat, props.platform);
         setData(res);
+        props.getTotal({platform: title, total: parseInt(res.total)})
         setLoading(false);
       } catch (e) {
         setData(data);
@@ -31,11 +37,12 @@ const CryptoPortfolio = (props:any) => {
 
   return (
   <div className={styles.Crypto_portfolio}>
-    <TableContainer component={Paper} >
-      <Table aria-label="simple table">
+    <h2>{title}</h2>
+    <TableContainer component={Paper} sx={{ maxHeight: 510 }} >
+      <Table stickyHeader aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Coinbase Pro Portfolio</TableCell>
+            <TableCell>Token</TableCell>
             <TableCell align="right">Balance</TableCell>
             <TableCell align="right">Current Price</TableCell>
             <TableCell align="right">Total Value</TableCell>
@@ -51,10 +58,10 @@ const CryptoPortfolio = (props:any) => {
                 {row.currency}
               </TableCell>
               <TableCell align="right">{row.balance}</TableCell>
-              <TableCell align="right" max-width="50px">
+              <TableCell align="right" sx={{width: '175px'}}>
                 <Price loading={loading} price={row.price} fiat={props.fiat} />
               </TableCell>
-              <TableCell align="right" sx={{maxWidth: '50px'}}>
+              <TableCell align="right" sx={{width: '175px'}}>
                 <Price loading={loading} price={row.value} fiat={props.fiat} />
               </TableCell>
             </TableRow>
@@ -70,7 +77,7 @@ const CryptoPortfolio = (props:any) => {
         </TableFooter>
       </Table>
     </TableContainer>
-    
+    <div>{ data.total }</div>
   </div>
 )};
 

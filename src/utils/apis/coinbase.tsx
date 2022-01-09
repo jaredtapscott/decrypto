@@ -101,16 +101,27 @@ const getCurrencies = async () => {
 
 }
 
-
+/**
+ * @name: createPortfolio
+ * @param fiat {string}
+ * @param api {string}
+ * @returns 
+ */
 const createPortfolio = async (fiat:string, api:string) => {
 
     const url = 'https://us-central1-decrypto-1b1ce.cloudfunctions.net/api/coinbase/crypto';
-    let body = {
-        path: '/accounts',
+    let body:any = {
         method: 'GET',
         fiat: fiat,
-        api: api,
+        api: 'pro',
     };
+
+    // grab data from Coinbase Pro or regular Coinbase
+    if (api === 'pro') {
+        body.path = '/accounts';
+    } else {
+        body.path = '/coinbase-accounts';
+    }
 
     // get access token
     let token = await getToken();
@@ -135,6 +146,21 @@ const createPortfolio = async (fiat:string, api:string) => {
 
 }
 
+const CoinbaseWallets = async () => {
+    try {
+        let path = '/coinbase-accounts';
+        let res = await apiCall('GET', path, {api: 'pro'});
+        const filteredList = res.filter((data:any) => data.balance > 0);
+        const priceList:any = await addPriceToObjectArray(filteredList, 'CAD');
+        console.log('allWallets: ', priceList);
+
+        return priceList;
+    } catch (err) {
+        console.error('error: ', err)
+    }
+}
+
+
 // Exports
 const api = {
     getCrypto: GetCrypto,
@@ -142,6 +168,7 @@ const api = {
     addPrice: addPriceToObjectArray,
     createPortfolio: createPortfolio,
     getCurrencies: getCurrencies,
+    coinbaseWallets: CoinbaseWallets
 };
 
 export default api;

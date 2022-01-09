@@ -27,7 +27,6 @@ export const apiCall = async (method:string, path:string, bodyObject?:any) => {
 
     // get access token
     let token = await getToken();
-
     const options = {
         method: 'POST',
         body: JSON.stringify(body),
@@ -36,13 +35,18 @@ export const apiCall = async (method:string, path:string, bodyObject?:any) => {
             'authorization': token,
         }
     };
-    return fetch(url, options)
-        .then((res:any) => {
-            return res.json();
-        }).then((data: any) => {
-            return data.data;
-        }).catch((err:any) => {
-            console.log('API Call: ', body.api + body.path); 
-            console.error('error: ', err)
-        });
+    
+    try {
+        return fetch(url, options)
+            .then((res:any) => {
+                return res.json();
+            }).then((data: any) => {
+                return data.data;
+            }).catch((err:any) => {
+                console.log('API Call: ', body.api + body.path); 
+                console.error('error: ', err)
+            });
+    } catch (err) {
+        console.error('error: ', err)
+    }
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { handleError, setData } from './utils';
-import coinbase from './coinbase';
+import coinbase from './coinbase-pro';
 
 /**
  * @name: getUserCrypto
@@ -12,7 +12,6 @@ export const getUserCrypto = async (req: Request, res: Response) => {
     try {
         // Create Request Object
         req.body.method = 'GET';
-        req.body.path = '/accounts';
         req.body.internal = true; // tells the api call to return the data to this function instead of send API response (i.e. res.send())
 
 
