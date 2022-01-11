@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Crypto_portfolio.module.css';
 import Price from '../../Price/Price';
 import api from '../../../utils/apis/coinbase';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper} from '@mui/material';
+import {Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper} from '@mui/material';
 
 const CryptoPortfolio = (props:any) => {
   let initData = {list: [], total: 0}
@@ -37,7 +37,7 @@ const CryptoPortfolio = (props:any) => {
 
   return (
   <div className={styles.Crypto_portfolio}>
-    <h2>{title}</h2>
+    <Typography variant="h6">{title}</Typography>
     <TableContainer component={Paper} sx={{ maxHeight: 510 }} >
       <Table stickyHeader aria-label="simple table">
         <TableHead>
@@ -77,7 +77,6 @@ const CryptoPortfolio = (props:any) => {
         </TableFooter>
       </Table>
     </TableContainer>
-    <div>{ data.total }</div>
   </div>
 )};
 

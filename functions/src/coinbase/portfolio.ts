@@ -32,6 +32,27 @@ export const getUserCrypto = async (req: Request, res: Response) => {
 
 };
 
+// give this function an array of objects with a "currency" property and this will
+// add the price to each object and return a new object with the new array and with the
+// total of all currencies in the array
+
+
+const addPriceToObjectArray =  async (arr:Array<[]>, fiat:string, req: Request, res: Response) => {
+    let total: any = 0;
+    let list: any = [];
+    let data = {list: list, total: total};
+    let newList: any = await Promise.all(arr.map(async (item:any, i:number) => {
+        // add pricing data to the object
+        item = await getPrice(req, res, item.currency, fiat, item);
+        // calculate the total
+        data.total = data.total + parseFloat(item.value);
+        return item;
+    }));
+    data.total = data.total.toFixed(2);
+    data.list = newList;
+    return data;
+}
+
 /**
  * GetPrice
  * @param currency - this should be a cryptocurrency symbol such as 'BTD' or 'ETH' 
@@ -81,22 +102,4 @@ const getPrice = async (req: Request, res: Response, currency:any, fiat:string, 
    
 };
 
-// give this function an array of objects with a "currency" property and this will
-// add the price to each object and return a new object with the new array and with the
-// total of all currencies in the array
-const addPriceToObjectArray =  async (arr:Array<[]>, fiat:string, req: Request, res: Response) => {
-    let total: any = 0;
-    let list: any = [];
-    let data = {list: list, total: total};
-    let newList: any = await Promise.all(arr.map(async (item:any, i:number) => {
-        // add pricing data to the object
-        item = await getPrice(req, res, item.currency, fiat, item);
-        // calculate the total
-        data.total = data.total + parseFloat(item.value);
-        return item;
-    }));
-    data.total = data.total.toFixed(2);
-    data.list = newList;
-    return data;
-}
 

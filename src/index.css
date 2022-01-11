@@ -26,5 +26,5 @@ code {
 }
 
 .MuiTableFooter-root {
-  background-color: #eee;
+  background-color: rgba(0,0,0,0.3);
 }

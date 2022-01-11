@@ -1,2 +1,7 @@
-08:47:23.478 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
-08:47:23.924 [main] INFO com.firebase.server.forge.App$ - Listening at localhost:9000
+12:50:15.202 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+12:50:17.945 [main] INFO com.firebase.server.forge.App$ - Listening at localhost:9000
+16:04:48.029 [Thread-1] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+16:04:48.092 [NamespaceSystem-akka.actor.default-dispatcher-12] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: decrypto-1b1ce-default-rtdb
+16:04:48.108 [NamespaceSystem-akka.actor.default-dispatcher-12] INFO com.firebase.core.namespace.NamespaceActor - Stopping namespace actor for decrypto-1b1ce-default-rtdb
+16:04:48.145 [NamespaceSystem-akka.actor.default-dispatcher-12] INFO com.firebase.core.namespace.NamespaceActor - Gauges removed for decrypto-1b1ce-default-rtdb
+16:04:48.183 [Thread-1] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.

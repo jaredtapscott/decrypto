@@ -33,7 +33,7 @@ const Dashboard = () => {
   <Container className={styles.Dashboard}>
     <Box sx={{ flexGrow: 1 }}>
       <Toolbar>
-        <Typography variant="h5" sx={{flexGrow: 1}}>Jared's Portfolio:</Typography> 
+        <Typography variant="h5" sx={{flexGrow: 1}}>Dashboard</Typography> 
         <Box>
           <FormControl>
               <InputLabel id="currency_switcher">Currency</InputLabel>
@@ -54,11 +54,11 @@ const Dashboard = () => {
       </Toolbar>
 
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item md={4} xs={12}>
           <Total data={grandTotal} fiat={fiat} source="Grand Total" />
         </Grid>
         {totals?.map((item:any, i:number) => (
-        <Grid  key={i} item xs={4}>
+        <Grid  key={i} item md={4} xs={12}>
           <Total data={item.total} fiat={fiat} source={item.platform} />
         </Grid>
         ))}
@@ -66,11 +66,11 @@ const Dashboard = () => {
 
       <Suspense fallback={<p>loading...</p>}>
 
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Grid container spacing={7} sx={{marginTop: '10px'}}>
+          <Grid item md={6} xs={12}>
             <CryptoPortfolio platform="pro" fiat={fiat} getTotal={getTotal} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item md={6} xs={12}>
             <CryptoPortfolio platform="v2" fiat={fiat}  getTotal={getTotal} />
           </Grid>
         </Grid>
